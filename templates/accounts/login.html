@@ -9,31 +9,14 @@
         <div class="card my-5">
           <div class="card-body">
             <a href="#" class="d-flex justify-content-center">
-              <img src="{{ url_for('static', filename='assets/images/logo-dark.svg') }}" />
+              <img style="height: 50px;" src="{{ url_for('static', filename='assets/images/logo.png') }}" />
             </a>
             <div class="row">
               <div class="d-flex justify-content-center">
                 <div class="auth-header">
-                  <h2 class="text-secondary mt-5"><b>Hi, Welcome Back</b></h2>
+                  <h2 class="text-secondary mt-5"><b>Bienvenido</b></h2>
                 </div>
               </div>
-            </div>
-            {% if has_google %}
-            <div class="d-grid">
-              <a href="{{ url_for('google.login') }}" class="btn mt-2 btn-light-primary bg-light text-muted">
-                <img width="40px" src="{{ url_for('static', filename='assets/images/authentication/google-icon.svg') }}" />Sign In With Google
-              </a>
-            </div>
-            {% endif %}
-            {% if has_github %}
-            <div class="d-grid">
-              <a href="{{ url_for('github.login') }}" class="btn mt-2 btn-light-primary bg-light text-muted">
-                <img width="40px" src="{{ url_for('static', filename='assets/images/authentication/github-icon.svg') }}" />Sign In With Github
-              </a>
-            </div>
-            {% endif %}
-            <div class="saprator mt-3">
-              <span>or</span>
             </div>
             <h5 class="my-4 d-flex justify-content-center">
 
