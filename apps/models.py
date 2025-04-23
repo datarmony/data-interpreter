@@ -1,65 +1,31 @@
 # -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
 
-from email.policy import default
 from apps import db
 from sqlalchemy.exc import SQLAlchemyError
 from apps.exceptions.exception import InvalidUsage
 import datetime as dt
-from sqlalchemy.orm import relationship
-from enum import Enum
+import re
 
-class CURRENCY_TYPE(Enum):
-    usd = 'usd'
-    eur = 'eur'
+class Dashboard(db.Model):
+    __tablename__ = "dashboards"
 
-class Product(db.Model):
-
-    __tablename__ = 'products'
-
-    id            = db.Column(db.Integer,      primary_key=True)
-    name          = db.Column(db.String(128),  nullable=False)
-    info          = db.Column(db.Text,         nullable=True)
-    price         = db.Column(db.Integer,      nullable=False)
-    currency      = db.Column(db.Enum(CURRENCY_TYPE), default=CURRENCY_TYPE.usd, nullable=False)
-
-    date_created  = db.Column(db.DateTime,     default=dt.datetime.utcnow())
-    date_modified = db.Column(db.DateTime,     default=db.func.current_timestamp(),
-                                               onupdate=db.func.current_timestamp())
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    share_link = db.Column(db.String(255), nullable=False)
+    embed_link = db.Column(db.String(255), nullable=False)
     
-    def __init__(self, **kwargs):
-        super(Product, self).__init__(**kwargs)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)  # NEW
+    user = db.relationship("Users", backref="dashboards")  # Optional reverse access
 
-    def __repr__(self):
-        return f"{self.name} / ${self.price}"
+    def __init__(self, name, share_link, user_id, embed_link=None):
+        self.name = name
+        self.share_link = share_link
+        self.embed_link = embed_link or self.generate_embed_link(share_link)
+        self.user_id = user_id
 
-    @classmethod
-    def find_by_id(cls, _id: int) -> "Product":
-        return cls.query.filter_by(id=_id).first() 
+    def generate_embed_link(self, share_link):
+        return re.sub(r"/u/\d+/reporting", "/embed/reporting", share_link)
 
-    @classmethod
-    def get_list(cls):
-        return cls.query.all()
-
-    def save(self) -> None:
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            db.session.close()
-            error = str(e.__dict__['orig'])
-            raise InvalidUsage(error, 422)
-
-    def delete(self) -> None:
-        try:
-            db.session.delete(self)
-            db.session.commit()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            db.session.close()
-            error = str(e.__dict__['orig'])
-            raise InvalidUsage(error, 422)
-        return
+    def save(self):
+        db.session.add(self)
+        db.session.commit()

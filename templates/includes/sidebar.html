@@ -13,7 +13,7 @@
       <div class="center-btn">
         <button id="create-dashboard-btn" class="btn btn-primary btn-sm" data-bs-toggle="modal"
           data-bs-target="#createDashboardModal">
-          <i class="ti ti-plus"></i> Create Dashboard
+          <i class="ti ti-plus"></i> Crear Dashboard
         </button>
       </div>
       <ul class="pc-navbar">
@@ -33,6 +33,24 @@
             <li class="pc-item"><a class="pc-link" href="{{ url_for('authentication_blueprint.login') }}">Login</a></li>
             <li class="pc-item"><a class="pc-link"
                 href="{{ url_for('authentication_blueprint.register') }}">Register</a></li>
+                <li class="pc-item pc-caption">
+                  <label>Your Dashboards</label>
+                  <i class="ti ti-layout-dashboard"></i>
+                </li>
+                {% for dashboard in current_user.dashboards %}
+                  <li class="pc-item">
+                    <a href="{{ dashboard.embed_link }}" target="_blank" class="pc-link">
+                      <span class="pc-micon"><i class="ti ti-layout"></i></span>
+                      <span class="pc-mtext">{{ dashboard.name }}</span>
+                    </a>
+                  </li>
+                {% else %}
+                  <li class="pc-item">
+                    <span class="pc-link text-muted">
+                      <i class="ti ti-info-circle"></i> No dashboards yet
+                    </span>
+                  </li>
+                {% endfor %}
             {% endif %}
 
           </ul>
@@ -58,6 +76,28 @@
                 class="ti ti-brand-chrome"></i></span><span class="pc-mtext">Sample page</span></a>
         </li>
 
+        {% if current_user.is_authenticated %}
+        <li class="pc-item pc-caption">
+          <label>Dashboards</label>
+          <i class="ti ti-chart-bar"></i>
+        </li>
+        {% if current_user.dashboards %}
+        <li class="pc-item pc-hasmenu">
+          <a href="#!" class="pc-link">
+            <span class="pc-micon"><i class="ti ti-chart-bar"></i></span>
+            <span class="pc-mtext">My Dashboards</span>
+            <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
+          </a>
+          <ul class="pc-submenu">
+            {% for dashboard in current_user.dashboards %}
+            <li class="pc-item">
+              <a class="pc-link" href="">
+                {{ dashboard.name }}
+              </a>
+            </li>
+            {% endfor %}
+            {% endif %}
+            {% endif %}
       </ul>
     </div>
   </div>

@@ -7,6 +7,11 @@ from apps.pages import blueprint
 from flask import render_template, request
 from flask_login import login_required
 from jinja2 import TemplateNotFound
+from apps.models import Dashboard
+from flask import jsonify
+from flask_login import current_user
+from apps import db
+
 
 @blueprint.route('/index')
 @login_required
@@ -57,38 +62,19 @@ def password_change():
 def password_change_done():
     return render_template('accounts/password_change_done.html')
 
-@blueprint.route('/<template>')
-@login_required
-def route_template(template):
+@blueprint.route("/create-dashboard", methods=["POST"])
+def create_dashboard():
+    name = request.form.get("name")
+    share_link = request.form.get("share_link")
 
-    try:
+    new_dashboard = Dashboard(
+        name=name,
+        share_link=share_link,
+        user_id=current_user.id
+    )
+    
+    db.session.add(new_dashboard)
+    db.session.commit()
+    
+    return jsonify({"message": "Dashboard created"}), 201
 
-        if not template.endswith('.html'):
-            template += '.html'
-
-        # Detect the current page
-        segment = get_segment(request)
-
-        # Serve the file (if exists) from app/templates/home/FILE.html
-        return render_template("home/" + template, segment=segment)
-
-    except TemplateNotFound:
-        return render_template('home/page-404.html'), 404
-
-    except:
-        return render_template('home/page-500.html'), 500
-
-# Helper - Extract current page name from request
-def get_segment(request):
-
-    try:
-
-        segment = request.path.split('/')[-1]
-
-        if segment == '':
-            segment = 'index'
-
-        return segment
-
-    except:
-        return None
