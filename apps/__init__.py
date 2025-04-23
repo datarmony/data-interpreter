@@ -17,7 +17,7 @@ def register_extensions(app):
     login_manager.init_app(app)
 
 def register_blueprints(app):
-    for module_name in ('authentication', 'pages', 'dyn_dt', 'charts', ):
+    for module_name in ('authentication', 'pages',):
         module = import_module('apps.{}.routes'.format(module_name))
         app.register_blueprint(module.blueprint)
 

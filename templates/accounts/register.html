@@ -1,6 +1,6 @@
 {% extends 'layouts/auth_base.html' %}
 
-{% block title %} SignUp {% endblock title %}
+{% block title %} Registrarse {% endblock title %}
 
 {% block content %}
   <div class="auth-main">
@@ -9,21 +9,21 @@
         <div class="card mt-5">
           <div class="card-body">
             <a href="#" class="d-flex justify-content-center mt-3">
-              <img style="height: 30px;" src="{{ url_for('static', filename='assets/images/logo.png') }}" />
+              <img style="height: 50px;" src="{{ url_for('static', filename='assets/images/logo.png') }}" />
             </a>
             <div class="row">
               <div class="d-flex justify-content-center">
                 <div class="auth-header">
-                  <h2 class="text-secondary mt-5"><b>Sign up</b></h2>
+                  <h2 class="text-secondary mt-5"><b>Regístrate</b></h2>
                 </div>
               </div>
             </div>
             <!--
             <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted" style="width: 100%">
-              <img src="{{ url_for('static', filename='assets/images/authentication/google-icon.svg') }}" />Sign Up With Google
+              <img src="{{ url_for('static', filename='assets/images/authentication/google-icon.svg') }}" />Registrarse con Google
             </button>
             <div class="saprator mt-3">
-              <span>or</span>
+              <span>o</span>
             </div>
             -->
             <h5 class="my-4 d-flex justify-content-center">
@@ -33,7 +33,7 @@
                   {{ msg | safe }}
                 </span>
               {% else %}
-                Add your credentials
+                Ingresa tus credenciales
               {% endif %} 
 
             </h5>
@@ -42,7 +42,7 @@
 
               <hr />
               <h5 class="d-flex justify-content-center"> 
-                <a href="{{ url_for('authentication_blueprint.login') }}" class="btn btn-secondary p-2">Sign IN</a>
+                <a href="{{ url_for('authentication_blueprint.login') }}" class="btn btn-secondary p-2">Iniciar Sesión</a>
               </h5>              
 
             {% else %}
@@ -54,33 +54,33 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-floating mb-3">
-                      {{ form.username(placeholder="Username", class="form-control") }}
-                      <label for="floatingInput">Username</label>
+                      {{ form.username(placeholder="Nombre de usuario", class="form-control") }}
+                      <label for="floatingInput">Nombre de usuario</label>
                     </div>
                   </div>
                 </div>
                 <div class="form-floating mb-3">
-                  {{ form.email(placeholder="Email", class="input form-control", type="email") }}
-                  <label for="floatingInput">Email Address</label>
+                  {{ form.email(placeholder="Correo electrónico", class="input form-control", type="email") }}
+                  <label for="floatingInput">Dirección de correo electrónico</label>
                 </div>
                 <div class="form-floating mb-3">
-                  {{ form.password(placeholder="Password", class="form-control", type="password") }}
-                  <label for="floatingInput">Password</label>
+                  {{ form.password(placeholder="Contraseña", class="form-control", type="password") }}
+                  <label for="floatingInput">Contraseña</label>
                 </div>
                 <div class="form-check mt-3s">
                   <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked="" />
                   <label class="form-check-label" for="customCheckc1">
-                    <h5>Agree with <span>Terms & Condition.</span></h5>
+                    <h5>Acepto los <span>Términos y Condiciones.</span></h5>
                   </label>
                 </div>
                 <div class="d-grid mt-4">
-                  <button type="submit" name="register" class="btn btn-secondary p-2">Sign Up</button>
+                  <button type="submit" name="register" class="btn btn-secondary p-2">Registrarse</button>
                 </div>
               </form>
 
               <hr />
-              <h5 class="d-flex justify-content-center">Already have an account? 
-                <a class="ms-2" href="{{ url_for('authentication_blueprint.login') }}">Login</a>
+              <h5 class="d-flex justify-content-center">¿Ya tienes una cuenta?
+                <a class="ms-2" href="{{ url_for('authentication_blueprint.login') }}">Iniciar Sesión</a>
               </h5>
 
             {% endif %} 
