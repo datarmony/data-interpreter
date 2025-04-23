@@ -1,0 +1,27 @@
+<div class="modal fade" id="createDashboardModal" tabindex="-1" role="dialog" aria-labelledby="createDashboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createDashboardModalLabel">Create New Dashboard</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="createDashboardForm">
+            <div class="form-group mb-3">
+              <label for="dashboardName">Dashboard Name</label>
+              <input type="text" class="form-control" id="dashboardName" name="name" placeholder="Enter dashboard name" required>
+            </div>
+            <div class="form-group mb-3">
+              <label for="shareLink">Share Link</label>
+              <input type="url" class="form-control" id="shareLink" name="share_link" placeholder="https://lookerstudio.google.com/s/..." required>
+              <small class="form-text text-muted">Paste the Looker Studio share link here</small>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="saveDashboardBtn">Create Dashboard</button>
+        </div>
+      </div>
+    </div>
+  </div>

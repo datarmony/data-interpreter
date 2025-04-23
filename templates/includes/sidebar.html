@@ -4,12 +4,15 @@
     <div class="m-header">
       <a href="index.html" class="b-brand">
         <!-- ========   Change your logo from here   ============ -->
-        <img style="height: 30px;" src="{{ url_for('static', filename='assets/images/logo.png') }}" alt="" class="logo logo-lg" />
+        <img style="height: 30px;" src="{{ url_for('static', filename='assets/images/logo.png') }}" alt=""
+          class="logo logo-lg" />
       </a>
     </div>
     <div class="navbar-content">
+
       <div class="center-btn">
-        <button id="create-dashboard-btn" class="btn btn-primary btn-sm">
+        <button id="create-dashboard-btn" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+          data-bs-target="#createDashboardModal">
           <i class="ti ti-plus"></i> Create Dashboard
         </button>
       </div>
@@ -24,10 +27,12 @@
           <ul class="pc-submenu">
 
             {% if current_user.is_authenticated %}
-              <li class="pc-item"><a class="pc-link" href="{{ url_for('authentication_blueprint.logout') }}">Logout</a></li>
+            <li class="pc-item"><a class="pc-link" href="{{ url_for('authentication_blueprint.logout') }}">Logout</a>
+            </li>
             {% else %}
-              <li class="pc-item"><a class="pc-link" href="{{ url_for('authentication_blueprint.login') }}">Login</a></li>
-              <li class="pc-item"><a class="pc-link" href="{{ url_for('authentication_blueprint.register') }}">Register</a></li>
+            <li class="pc-item"><a class="pc-link" href="{{ url_for('authentication_blueprint.login') }}">Login</a></li>
+            <li class="pc-item"><a class="pc-link"
+                href="{{ url_for('authentication_blueprint.register') }}">Register</a></li>
             {% endif %}
 
           </ul>
@@ -41,8 +46,8 @@
                 class="ti ti-typography"></i></span><span class="pc-mtext">Typography</span></a>
         </li>
         <li class="pc-item">
-          <a href="{{ url_for('home_blueprint.color') }}" class="pc-link"><span class="pc-micon"><i class="ti ti-brush"></i></span><span
-              class="pc-mtext">Color</span></a>
+          <a href="{{ url_for('home_blueprint.color') }}" class="pc-link"><span class="pc-micon"><i
+                class="ti ti-brush"></i></span><span class="pc-mtext">Color</span></a>
         </li>
         <li class="pc-item">
           <a href="{{ url_for('home_blueprint.icon_tabler') }}" class="pc-link"><span class="pc-micon"><i
@@ -50,7 +55,8 @@
         </li>
         <li class="pc-item">
           <a href="{{ url_for('home_blueprint.sample_page') }}" class="pc-link"><span class="pc-micon"><i
-                class="ti ti-brand-chrome"></i></span><span class="pc-mtext">Sample page</span></a></li>
+                class="ti ti-brand-chrome"></i></span><span class="pc-mtext">Sample page</span></a>
+        </li>
 
       </ul>
     </div>
