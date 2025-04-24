@@ -1,5 +1,4 @@
-<div class="modal fade" id="createDashboardModal" tabindex="-1" role="dialog"
-  aria-labelledby="createDashboardModalLabel" aria-hidden="true">
+<div class="modal fade" id="createDashboardModal" tabindex="-1" role="dialog" aria-labelledby="createDashboardModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -7,20 +6,41 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="createDashboardForm">
+        <form id="createDashboardForm" novalidate>
           <div class="form-group mb-3">
             <label for="dashboardName">Dashboard Name</label>
-            <input type="text" class="form-control" id="dashboardName" name="name" placeholder="Enter dashboard name"
-              required>
+            <input type="text" class="form-control" id="dashboardName" name="name" placeholder="Enter dashboard name" required>
           </div>
-          <div class="form-group mb-3">
+
+          <div class="form-group mb-2">
             <label for="shareLink">Share Link</label>
             <input type="url" class="form-control" id="shareLink" name="share_link"
-              placeholder="https://lookerstudio.google.com/u/1/reporting/...." required>
-            <small class="form-text text-muted">Paste the Looker Studio link here</small>
+              placeholder="https://lookerstudio.google.com/u/1/reporting/..." required>
+            <div class="invalid-feedback">
+              Link must start with: <strong>https://lookerstudio.google.com/u/1/reporting/</strong>
+            </div>
           </div>
+
+          <div class="alert alert-info d-flex align-items-start gap-2 mb-3 p-3 small" role="alert">
+            <i class="ti ti-info-circle fs-5 mt-1"></i>
+            <div>
+              <span>
+                ¿No sabes cómo obtener tu enlace de Looker Studio?
+                <a data-bs-toggle="collapse" href="#howToLink" role="button" aria-expanded="false" aria-controls="howToLink" style="text-decoration: underline;">
+                  Haz clic aquí
+                </a>
+              </span>
+              <div class="collapse mt-2" id="howToLink">
+                Primero asegúrate de tener activada la opción de <strong>incrustar (embed)</strong> en tu dashboard.<br>
+                Luego simplemente copia la URL con la que accedes normalmente a tu informe desde Looker Studio.<br>
+                Esa URL debe comenzar con:<br>
+                <code>https://lookerstudio.google.com/u/1/reporting/...</code>
+              </div>
+            </div>
+          </div>                 
         </form>
       </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" id="saveDashboardBtn">Create Dashboard</button>
@@ -29,29 +49,19 @@
   </div>
 </div>
 
-{% block extra_js %}
-<script>
-  document.getElementById("saveDashboardBtn").addEventListener("click", function () {
-    const form = document.getElementById("createDashboardForm");
-    const formData = new FormData(form);
 
-    fetch("/create-dashboard", {
-      method: "POST",
-      body: formData,
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          alert("Dashboard created!");
-          location.reload();
-        } else {
-          alert(data.message);
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Something went wrong!");
-      });
-  });
-</script>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+  <div id="dashboardToast" class="toast text-white bg-primary border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 300px;">
+    <div class="d-flex align-items-center p-3">
+      <div class="toast-body d-flex align-items-center gap-3 fs-5">
+        <i class="ti ti-checks fs-5"></i>
+        <span class="fw-medium">Dashboard creada con exito!</span>
+      </div>
+      <button type="button" class="btn-close btn-close-white ms-3" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='assets/js/pages/create-dashboard.js') }}"></script>
 {% endblock extra_js %}

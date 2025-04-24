@@ -76,5 +76,11 @@ def create_dashboard():
     db.session.add(new_dashboard)
     db.session.commit()
     
-    return jsonify({"message": "Dashboard created"}), 201
+    return jsonify(success=True, message="Dashboard created"), 201
+
+@blueprint.route('/dashboard/<int:dashboard_id>', methods=['GET'])
+@login_required
+def view_dashboard(dashboard_id):
+    dashboard = Dashboard.query.filter_by(id=dashboard_id, user_id=current_user.id).first_or_404()
+    return render_template('pages/dashboard-view.html', dashboard=dashboard,  dashboard_id=dashboard_id, segment='dashboards')
 

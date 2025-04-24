@@ -1,12 +1,45 @@
 {% extends 'layouts/base.html' %}
 
-{% block title %} Dashboard {% endblock title %}
+{% block title %} Dashboards {% endblock title %}
+
 {% block content %}
   <!-- [ Main Content ] start -->
   <div class="pc-container">
     <div class="pc-content">
       <!-- [ Main Content ] start -->
       <div class="row">
+        <!-- [ sample-page ] start -->
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-header">
+              <h5>Dashboards</h5>
+            </div>
+            <div class="card-body">
+              <table class="table align-middle">
+                <tbody>
+                  {% if current_user.dashboards %}
+                  {% for dashboard in current_user.dashboards %}
+                    <tr>
+                      <td class="fw-medium">{{ dashboard.name }}</td>
+                      <td class="text-end">
+                        <button class="btn btn-sm btn-outline-danger" title="Eliminar">
+                          <i class="ti ti-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  {% else %}
+                    <tr>
+                      <td class="text-muted text-center py-4" colspan="2">
+                        No hay dashboards creados aún.
+                      </td>
+                    </tr>
+                  {% endif %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
         <!-- [ sample-page ] end -->
       </div>
       <!-- [ Main Content ] end -->
@@ -16,5 +49,5 @@
 {% endblock content %}
 
 {% block extra_js %}
-  <!-- [Page Specific JS] end -->
+<!-- Aquí puedes añadir JavaScript adicional si lo necesitas -->
 {% endblock extra_js %}

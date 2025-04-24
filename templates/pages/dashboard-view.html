@@ -1,0 +1,45 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} {{ dashboard.name }} {% endblock title %}
+
+{% block content %}
+  <!-- [ Main Content ] start -->
+  <div class="pc-container">
+    <div class="pc-content">
+      <!-- [ Main Content ] start -->
+      <div class="row">
+        <!-- [ sample-page ] start -->
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+                <div class="text-end">
+                    <button type="button" class="btn btn-primary me-1" id="downloadReportButton">
+                        <i class="ti ti-download me-1"></i>
+                        Descargar PDF
+                    </button>
+                    <button type="button" class="btn btn-info me-1" id="analyzeReportButton">
+                        <i class="ti ti-server me-1"></i>
+                        Analizar con Gemini
+                    </button>
+                </div>
+                <hr/>
+                {% if dashboard.embed_link %}
+                <div class="embed-responsive embed-responsive-16by9" style="width: 100%; height: 100vh; min-height: 600px;">
+                  <iframe class="embed-responsive-item" style="width: 100%; height: 100%; border: none;" src="{{ dashboard.embed_link }}"
+                    allowfullscreen></iframe>
+                </div>
+                {% else %}
+                <div class="alert alert-warning" role="alert">
+                    Could not load dashboard. Embed URL is missing.
+                </div>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+        <!-- [ sample-page ] end -->
+      </div>
+      <!-- [ Main Content ] end -->
+    </div>
+  </div>
+  <!-- [ Main Content ] end -->
+{% endblock content %}
