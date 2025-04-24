@@ -6,6 +6,21 @@
   <!-- [ Main Content ] start -->
   <div class="pc-container">
     <div class="pc-content">
+      <div class="page-header">
+        <div class="page-block">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <div class="page-header-title">
+                <h5 class="m-b-10">Sample Page</h5>
+              </div>
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item" aria-current="page">Sample Page</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- [ Main Content ] start -->
       <div class="row">
         <!-- [ sample-page ] start -->
@@ -13,6 +28,10 @@
           <div class="card">
             <div class="card-body">
                 <div class="text-end">
+                  <div class="input-group input-group me-2 justify-content-start" style="width: 180px;">
+                    <input type="number" class="form-control" placeholder="Height (px)" id="iframeHeightInput" min="100" value="600">
+                    <button class="btn btn-secondary" type="button" id="setIframeHeightButton">Set Height</button>
+                  </div>
                     <button type="button" class="btn btn-primary me-1" id="downloadReportButton">
                         <i class="ti ti-download me-1"></i>
                         Descargar PDF
@@ -24,9 +43,11 @@
                 </div>
                 <hr/>
                 {% if dashboard.embed_link %}
-                <div class="embed-responsive embed-responsive-16by9" style="width: 100%; height: 100vh; min-height: 600px;">
+                <div class="embed-responsive embed-responsive-16by9">
+                  <div id="screenshot-border" style="width: 100%; height: 100vh; min-height: 600px; border: 5px transparent solid;">
                   <iframe class="embed-responsive-item" style="width: 100%; height: 100%; border: none;" src="{{ dashboard.embed_link }}"
                     allowfullscreen></iframe>
+                  </div>
                 </div>
                 {% else %}
                 <div class="alert alert-warning" role="alert">
@@ -43,3 +64,8 @@
   </div>
   <!-- [ Main Content ] end -->
 {% endblock content %}
+
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='assets/js/pages/view-dashboard.js') }}"></script>
+{% endblock extra_js %}

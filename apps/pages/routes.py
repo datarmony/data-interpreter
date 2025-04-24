@@ -82,5 +82,5 @@ def create_dashboard():
 @login_required
 def view_dashboard(dashboard_id):
     dashboard = Dashboard.query.filter_by(id=dashboard_id, user_id=current_user.id).first_or_404()
-    return render_template('pages/dashboard-view.html', dashboard=dashboard,  dashboard_id=dashboard_id, segment='dashboards')
+    return render_template('pages/view-dashboard.html', dashboard=dashboard,  dashboard_id=dashboard_id, segment='dashboards')
 
