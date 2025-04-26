@@ -84,3 +84,35 @@ def view_dashboard(dashboard_id):
     dashboard = Dashboard.query.filter_by(id=dashboard_id, user_id=current_user.id).first_or_404()
     return render_template('pages/view-dashboard.html', dashboard=dashboard,  dashboard_id=dashboard_id, segment='dashboards')
 
+@blueprint.route('/api/dashboard/<int:dashboard_id>/set-height', methods=['POST'])
+@login_required
+def set_dashboard_height(dashboard_id):
+    """API endpoint to set the height for a specific dashboard."""
+    dashboard = Dashboard.query.filter_by(id=dashboard_id, user_id=current_user.id).first()
+
+    if not dashboard:
+        return jsonify(success=False, message="Dashboard not found or access denied."), 404
+
+    # Prevent changing height if already set
+    if dashboard.height is not None:
+         return jsonify(success=False, message="Dashboard height is already set and cannot be changed."), 400
+
+    data = request.get_json()
+    if not data or 'height' not in data:
+        return jsonify(success=False, message="Missing 'height' in request body."), 400
+
+    try:
+        height = int(data['height'])
+        if height <= 0:
+             raise ValueError("Height must be a positive integer.")
+    except (ValueError, TypeError):
+        return jsonify(success=False, message="Invalid height value. Must be a positive integer."), 400
+
+    try:
+        dashboard.height = height
+        db.session.commit()
+        return jsonify(success=True, message=f"Dashboard height set to {height}px."), 200
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error saving dashboard height: {e}") # Log the error server-side
+        return jsonify(success=False, message="An internal error occurred while saving the height."), 500

@@ -3,69 +3,98 @@
 {% block title %} {{ dashboard.name }} {% endblock title %}
 
 {% block content %}
-  <!-- [ Main Content ] start -->
-  <div class="pc-container">
-    <div class="pc-content">
-      <div class="page-header">
-        <div class="page-block">
-          <div class="row align-items-center">
-            <div class="col-md-12">
-              <div class="page-header-title">
-                <h5 class="m-b-10">Sample Page</h5>
+<!-- [ Main Content ] start -->
+<div class="pc-container">
+  <div class="pc-content">
+    <!-- [ Main Content ] start -->
+    <div class="row">
+      <!-- [ sample-page ] start -->
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="text-end">
+              <button type="button" class="btn btn-primary me-1" id="downloadReportButton">
+                <i class="ti ti-download me-1"></i>
+                Descargar PDF
+              </button>
+              <button type="button" class="btn btn-info me-1" id="analyzeReportButton">
+                <i class="ti ti-server me-1"></i>
+                Analizar con Gemini
+              </button>
+            </div>
+            <br>
+            {% if dashboard.height is none %}
+            <div id="heightAdjustmentSection" class="alert alert-info">
+              <p class="mb-2"><strong>Ajustar Altura del Dashboard:</strong></p>
+              <p class="mb-3">Ajusta la altura hasta que la barra de desplazamiento vertical del dashboard desaparezca.
+                Una vez confirmada, esta altura no se podrá modificar fácilmente.</p>
+              <div class="d-flex align-items-center" style="width: 30%;">
+                <div class="input-group">
+                  <input type="number" class="form-control" placeholder="Height (px)" id="iframeHeightInput" min="100"
+                    value="600">
+                  <button class="btn btn-secondary" type="button" id="setIframeHeightButton">Establecer altura</button>
+                </div>
+                <button class="btn btn-primary ms-2" type="button" id="confirmIframeHeightButton"
+                  style="height: 43.8px; width: 200px;">Confirmar altura</button>
               </div>
-              <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item" aria-current="page">Sample Page</li>
-              </ul>
             </div>
+            <!-- Modal de Confirmación -->
+            <div class="modal fade" id="heightConfirmationPopup" tabindex="-1" aria-labelledby="heightConfirmationLabel"
+              aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-body text-center py-4 px-4">
+                    <p class="mb-4 fs-5">
+                      <strong id="heightConfirmationLabel">Confirmar ajuste de altura</strong><br><br>
+                      ¿Estás seguro de que deseas establecer esta altura? Una vez confirmada, no se podrá cambiar.<br>
+                      Por favor, verifica que todas las páginas del dashboard se muestren correctamente sin barras de
+                      desplazamiento vertical antes de continuar.
+                    </p>
+                    <div class="d-flex justify-content-center gap-2">
+                      <button type="button" class="btn btn-primary" id="confirmHeightBtn">Confirmar</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% endif %}
+            <hr />
+            {% if dashboard.embed_link %}
+            <div class="embed-responsive embed-responsive-16by9">
+              {% if dashboard.height is none %}
+              <div id="screenshot-border" style="width: 100%; border: 5px transparent solid;">
+                <iframe class="embed-responsive-item dashboard-iframe" style="width: 100%; height: 100vh;"
+                  src="{{ dashboard.embed_link }}" allowfullscreen></iframe>
+              </div>
+              {% else %}
+              <div id="screenshot-border" style="width: 100%; border: 5px transparent solid;">
+                <iframe class="embed-responsive-item" style="width: 100%; height: {{ dashboard.height | int }}px;"
+                  src="{{ dashboard.embed_link }}" allowfullscreen></iframe>
+              </div>
+              {% endif %}
+            </div>
+            {% else %}
+            <div class="alert alert-warning" role="alert">
+              Could not load dashboard. Embed URL is missing.
+            </div>
+            {% endif %}
           </div>
         </div>
       </div>
-      <!-- [ Main Content ] start -->
-      <div class="row">
-        <!-- [ sample-page ] start -->
-        <div class="col-sm-12">
-          <div class="card">
-            <div class="card-body">
-                <div class="text-end">
-                  <div class="input-group input-group me-2 justify-content-start" style="width: 180px;">
-                    <input type="number" class="form-control" placeholder="Height (px)" id="iframeHeightInput" min="100" value="600">
-                    <button class="btn btn-secondary" type="button" id="setIframeHeightButton">Set Height</button>
-                  </div>
-                    <button type="button" class="btn btn-primary me-1" id="downloadReportButton">
-                        <i class="ti ti-download me-1"></i>
-                        Descargar PDF
-                    </button>
-                    <button type="button" class="btn btn-info me-1" id="analyzeReportButton">
-                        <i class="ti ti-server me-1"></i>
-                        Analizar con Gemini
-                    </button>
-                </div>
-                <hr/>
-                {% if dashboard.embed_link %}
-                <div class="embed-responsive embed-responsive-16by9">
-                  <div id="screenshot-border" style="width: 100%; height: 100vh; min-height: 600px; border: 5px transparent solid;">
-                  <iframe class="embed-responsive-item" style="width: 100%; height: 100%; border: none;" src="{{ dashboard.embed_link }}"
-                    allowfullscreen></iframe>
-                  </div>
-                </div>
-                {% else %}
-                <div class="alert alert-warning" role="alert">
-                    Could not load dashboard. Embed URL is missing.
-                </div>
-                {% endif %}
-            </div>
-          </div>
-        </div>
-        <!-- [ sample-page ] end -->
-      </div>
-      <!-- [ Main Content ] end -->
+      <!-- [ sample-page ] end -->
     </div>
+    <!-- [ Main Content ] end -->
   </div>
-  <!-- [ Main Content ] end -->
+</div>
+<!-- [ Main Content ] end -->
 {% endblock content %}
 
-
 {% block extra_js %}
+{{ super() }}
+<script>
+  const DASHBOARD_ID = {{ dashboard_id }};
+</script>
 <script src="{{ url_for('static', filename='assets/js/pages/view-dashboard.js') }}"></script>
 {% endblock extra_js %}

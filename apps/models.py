@@ -13,15 +13,17 @@ class Dashboard(db.Model):
     name = db.Column(db.String(100), nullable=False)
     share_link = db.Column(db.String(255), nullable=False)
     embed_link = db.Column(db.String(255), nullable=False)
+    height = db.Column(db.Integer, nullable=True, default=None) # NEW height field
     
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)  # NEW
     user = db.relationship("Users", backref="dashboards")  # Optional reverse access
 
-    def __init__(self, name, share_link, user_id, embed_link=None):
+    def __init__(self, name, share_link, user_id, embed_link=None, height=None): # Added height
         self.name = name
         self.share_link = share_link
         self.embed_link = embed_link or self.generate_embed_link(share_link)
         self.user_id = user_id
+        self.height = height # Added height
 
     def generate_embed_link(self, share_link):
         return re.sub(r"/u/\d+/reporting", "/embed/reporting", share_link)
