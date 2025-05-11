@@ -13,7 +13,7 @@ class Dashboard(db.Model):
     name = db.Column(db.String(100), nullable=False)
     share_link = db.Column(db.String(255), nullable=False)
     embed_link = db.Column(db.String(255), nullable=False)
-    height = db.Column(db.Integer, nullable=True, default=None
+    height = db.Column(db.Integer, nullable=True, default=None)
     
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)  # NEW
     user = db.relationship("Users", backref="dashboards")  # Optional reverse access
