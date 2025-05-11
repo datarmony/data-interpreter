@@ -8,7 +8,7 @@ if (isDark === "true") {
 
 
 document.getElementById("p_dark_mode").addEventListener("change", function (event) {
-    console.log(this.checked)
+    log(this.checked)
 
     if (this.checked === true) { //set dark
         layout_change("dark")

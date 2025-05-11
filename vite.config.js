@@ -31,9 +31,22 @@ export default defineConfig(({ mode }) => {
             },
         },
         server: {
+            // Configure Cross-Origin Resource Sharing (CORS)
+            // `true` allows requests from any origin. Useful for local development when
+            // your frontend and backend might be on different ports/domains.
             cors: true,
+
+            // Specify which IP addresses the server should listen on.
+            // '0.0.0.0' means listen on all available network interfaces (e.g., localhost, and your local network IP).
+            // This allows you to access the dev server from other devices on your local network.
             host: '0.0.0.0',
+
+            // Configure Hot Module Replacement (HMR)
             hmr: {
+                // Specify the host for the HMR websocket connection.
+                // This is important when `server.host` is '0.0.0.0' and you're accessing
+                // the dev server from another device on the network.
+                // It tells the client (browser) the exact IP address to connect to for HMR updates.
                 host: '192.168.1.147'
             },
         },

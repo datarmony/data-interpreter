@@ -3,12 +3,9 @@
 {% block title %} {{ dashboard.name }} {% endblock title %}
 
 {% block content %}
-<!-- [ Main Content ] start -->
 <div class="pc-container">
   <div class="pc-content">
-    <!-- [ Main Content ] start -->
     <div class="row">
-      <!-- [ sample-page ] start -->
       <div class="col-sm-12">
         <div class="card">
           <div class="card-body">
@@ -83,14 +80,35 @@
           </div>
         </div>
       </div>
-      <!-- [ sample-page ] end -->
     </div>
-    <!-- [ Main Content ] end -->
   </div>
 </div>
-<!-- [ Main Content ] end -->
-{% endblock content %}
 
+<!-- Gemini Analysis Modal -->
+<div class="modal fade" id="geminiAnalysisModal" tabindex="-1" aria-labelledby="geminiAnalysisModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="geminiAnalysisModalLabel">Análisis de Gemini</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="geminiAnalysisBody">
+        <p>Cargando análisis...</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary me-auto" id="downloadAnalysisButton" style="display: none;"> <!-- Hidden initially -->
+          <i class="ti ti-download me-1"></i>
+          Descargar Analisis
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Gemini Analysis Modal -->
+
+{% endblock content %}
+ 
 {% block extra_js %}
 {{ super() }}
 <script>

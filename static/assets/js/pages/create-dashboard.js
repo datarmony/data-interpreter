@@ -1,17 +1,19 @@
+const lookerStudioRegex = /^https:\/\/lookerstudio\.google\.com\/u\/\d+\/reporting\//;
+
 // check if it has class invalid if it has remove it
 document.getElementById("shareLink").addEventListener("input", function () {
     if (this.classList.contains("is-invalid")) {
       this.classList.remove("is-invalid");
     }
 });
-  
+
 // Add the modal functionality to create a dashboard and makes sure the link is correct
 document.getElementById("saveDashboardBtn").addEventListener("click", function () {
     const form = document.getElementById("createDashboardForm");
     const linkInput = document.getElementById("shareLink");
     const linkValue = linkInput.value.trim();
     
-    if (!linkValue.startsWith("https://lookerstudio.google.com/u/1/reporting/")) {
+    if (!lookerStudioRegex.test(linkValue)) {
         linkInput.classList.add("is-invalid");
         return;
     } else {
@@ -26,7 +28,7 @@ document.getElementById("saveDashboardBtn").addEventListener("click", function (
     })
       .then(res => res.json())
       .then(data => {
-        console.log("Response:", data);
+        log("Response:", data);
         if (data.success) {
           // Show the toast
           const toastElement = document.getElementById("dashboardToast");
@@ -48,7 +50,7 @@ document.getElementById("saveDashboardBtn").addEventListener("click", function (
         }
       })
       .catch(err => {
-        console.error(err);
+        error(err);
         alert("Something went wrong!");
       });
   });

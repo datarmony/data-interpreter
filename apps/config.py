@@ -40,6 +40,11 @@ class Config(object):
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # Gemini API Configuration
+    GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', None)
+    GEMINI_DEFAULT_PROMPT = os.getenv('GEMINI_DEFAULT_PROMPT', None)
+    GEMINI_MODEL_NAME = os.getenv('GEMINI_MODEL_NAME', 'gemini-2.5-pro-exp-03-25')
+ 
     DB_ENGINE   = os.getenv('DB_ENGINE'   , None)
     DB_USERNAME = os.getenv('DB_USERNAME' , None)
     DB_PASS     = os.getenv('DB_PASS'     , None)

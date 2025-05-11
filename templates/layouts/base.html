@@ -33,5 +33,11 @@
   {% include 'includes/scripts.html' %}
 
   {% block extra_js %}{% endblock extra_js %}
+
+  <!-- Detect installed Extension -->
+  <script type="module" src="{{ url_for('static', filename='assets/js/extension.js') }}"></script>
+  <script>
+    window.APP_DEBUG = {{ DEBUG | tojson }};
+  </script>
 </body>
 </html>

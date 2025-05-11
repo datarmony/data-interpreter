@@ -33,3 +33,5 @@ Flask-CDN==1.5.3
 
 # flask_mysqldb
 # psycopg2-binary
+google-generativeai==0.5.4 # For Gemini API
+markdown==3.6 # For converting Markdown to HTML

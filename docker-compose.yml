@@ -1,7 +1,6 @@
-version: '3.8'
 services:
-  appseed-app:
-    container_name: appseed_app
+  data-interpreter:
+    container_name: data-interpreter
     restart: always
     build: .
     networks:
@@ -18,7 +17,7 @@ services:
     networks:
       - web_network
     depends_on: 
-      - appseed-app
+      - data-interpreter
 networks:
   db_network:
     driver: bridge

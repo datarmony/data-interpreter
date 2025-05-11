@@ -1,3 +1,21 @@
+// Custom functions that only work if APP_DEBUG is true
+function log(...args) {
+  if (window.APP_DEBUG === true) {
+    console.log(...args);
+  }
+}
+
+function warn(...args) {
+  if (window.APP_DEBUG === true) {
+    console.warn(...args);
+  }
+}
+
+function error(...args) {
+  if (window.APP_DEBUG === true) {
+    console.error(...args);
+  }
+}
 'use strict';
 
 var flg = '0';
@@ -112,14 +130,67 @@ document.addEventListener('DOMContentLoaded', function () {
   var sidebar_hide = document.querySelector('#sidebar-hide');
   if (sidebar_hide) {
     sidebar_hide.addEventListener('click', function () {
-      if (document.querySelector('.pc-sidebar').classList.contains('pc-sidebar-hide')) {
-        document.querySelector('.pc-sidebar').classList.remove('pc-sidebar-hide');
+      const iframe = document.querySelector('iframe.embed-responsive-item');
+      const dashboardContent = document.querySelector('.pc-content');
+      const sidebar = document.querySelector('.pc-sidebar');
+
+      if (iframe && dashboardContent && sidebar) {
+        const initialDashboardWidth = dashboardContent.offsetWidth;
+        const initialIframeHeight = iframe.offsetHeight;
+        log('pcoded.js: Initial Dashboard Width:', initialDashboardWidth);
+        log('pcoded.js: Initial Iframe Height:', initialIframeHeight);
+
+        // Toggle sidebar visibility
+        if (sidebar.classList.contains('pc-sidebar-hide')) {
+          sidebar.classList.remove('pc-sidebar-hide');
+          log('pcoded.js: Sidebar shown');
+        } else {
+          sidebar.classList.add('pc-sidebar-hide');
+          log('pcoded.js: Sidebar hidden');
+        }
+
+        // Recalculate iframe height after sidebar animation/layout change
+        setTimeout(() => {
+          const newDashboardWidth = dashboardContent.offsetWidth;
+          log('pcoded.js: New Dashboard Width (after toggle):', newDashboardWidth);
+          if (typeof window.recalculateAndApplyIframeHeight === 'function') {
+            window.recalculateAndApplyIframeHeight(iframe, initialIframeHeight, initialDashboardWidth, newDashboardWidth);
+          } else {
+            console.error('recalculateAndApplyIframeHeight function is not defined globally.');
+          }
+        }, 300); // Delay to allow for CSS transitions (adjust if needed)
       } else {
-        document.querySelector('.pc-sidebar').classList.add('pc-sidebar-hide');
+        // Fallback to original behavior if elements are not found
+        // console.warn('pcoded.js: Iframe, dashboardContent, or sidebar not found for height adjustment.');
+        if (sidebar && sidebar.classList.contains('pc-sidebar-hide')) {
+          sidebar.classList.remove('pc-sidebar-hide');
+        } else if (sidebar) {
+          sidebar.classList.add('pc-sidebar-hide');
+        }
       }
     });
   }
 });
+
+// Global function for iframe height recalculation
+window.recalculateAndApplyIframeHeight = function(iframeElement, currentIframeHeight, currentDashboardWidth, newDashboardWidth) {
+  if (!iframeElement) {
+    // console.warn('Global recalc: iframeElement not provided.');
+    return;
+  }
+  log('Global recalc: currentIframeHeight:', currentIframeHeight, 'currentDashboardWidth:', currentDashboardWidth, 'newDashboardWidth:', newDashboardWidth);
+
+  if (currentDashboardWidth > 0 && newDashboardWidth > 0 && currentDashboardWidth !== newDashboardWidth) {
+    const newIframeHeight = (currentIframeHeight / currentDashboardWidth) * newDashboardWidth;
+    iframeElement.style.height = newIframeHeight + 20 + 'px';
+    log('Global recalc: Calculated New Iframe Height:', newIframeHeight);
+    log('Global recalc: Applied new height to iframe:', iframeElement.style.height);
+  } else if (currentDashboardWidth === newDashboardWidth) {
+    log('Global recalc: Dashboard width did not change. Iframe height not adjusted.');
+  } else {
+    log('Global recalc: Error: Invalid width for calculation or width did not change.');
+  }
+};
 
 // Menu click start
 function add_scroller() {
@@ -547,3 +618,4 @@ var slideToggle = (target, duration = 0) => {
 
 // ========================== =============================
 // ========================== =============================
+
