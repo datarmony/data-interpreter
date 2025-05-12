@@ -1,6 +1,9 @@
 # -*- encoding: utf-8 -*-
+import os
 
-bind = '0.0.0.0:5005'
+# Get the port from the environment variable PORT, default to 8080 if not set
+port = os.getenv('PORT', '8080')
+bind = f'0.0.0.0:{port}'
 workers = 1
 accesslog = '-'
 loglevel = 'debug'
