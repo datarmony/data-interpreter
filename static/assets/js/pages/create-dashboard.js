@@ -1,4 +1,4 @@
-const lookerStudioRegex = /^https:\/\/lookerstudio\.google\.com\/u\/\d+\/reporting\//;
+const lookerStudioRegex = /^https:\/\/lookerstudio\.google\.com\//;
 
 // check if it has class invalid if it has remove it
 document.getElementById("shareLink").addEventListener("input", function () {

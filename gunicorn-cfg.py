@@ -9,4 +9,4 @@ accesslog = '-'
 loglevel = 'debug'
 capture_output = True
 enable_stdio_inheritance = True
-timeout = 120  # Worker timeout in seconds
+timeout = 999999  # Worker timeout in seconds
