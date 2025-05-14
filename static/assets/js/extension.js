@@ -1,38 +1,36 @@
-const browser = detectBrowser();
-const EXTENSION_ID = 'hciighoepojdapoicknblaebjdiflhkd';
 const REQUIRED_PAGE_PATH = '/extension-required';
+const browser = detectBrowser();
 
-switch (browser) {
-    case "chrome":
-        chrome.runtime.sendMessage(EXTENSION_ID, 'version', (response) => {
-            if (chrome.runtime.lastError) {
-                log("Extension not installed or communication error:", chrome.runtime.lastError.message);
-                redirectToExtensionRequired();
-            } else if (response && response.version) {
-                log("Extension installed, version:", response.version);
-            } else {
-                log("Extension responded, but the response format was unexpected:", response);
-                redirectToExtensionRequired();
-            }
-        });
-        break;
-    case "firefox":
-        redirectToExtensionRequired()
-        break;
-    case "safari":
-        redirectToExtensionRequired()
-        break;
-    default:
-        redirectToExtensionRequired()
+// Unified extension check
+function checkExtensionInstalled() {
+  if (browser === "chrome") {
+    chrome.runtime.sendMessage(
+      { action: "ping" }, // Generic ping message
+      (response) => {
+        if (chrome.runtime.lastError || !response?.version) {
+          log("Extension missing/invalid:", chrome.runtime.lastError?.message || "No version in response");
+          redirectToExtensionRequired();
+        } else {
+          log("Extension detected. Version:", response.version);
+          // Optional: Store version for later use
+          localStorage.setItem('extensionVersion', response.version);
+        }
+      }
+    );
+  } else {
+    redirectToExtensionRequired(); // Non-Chrome browsers
+  }
 }
 
+
+function log(...args) { console.log('[WEBSITE]', ...args); }
 
 function detectBrowser() {
     let userAgent = navigator.userAgent;
     let isChrome = userAgent.includes("Chrome") && !userAgent.includes("OPR") && !userAgent.includes("Edg");
     let isFirefox = userAgent.includes("Firefox");
     let isSafari = userAgent.includes("Safari") && !userAgent.includes("Chrome") && !userAgent.includes("Chromium");
-
+    
     if (isChrome) return "chrome";
     if (isFirefox) return "firefox";
     if (isSafari) return "safari";
@@ -48,3 +46,5 @@ function redirectToExtensionRequired() {
     }
 }
 
+// Initial check on page load
+document.addEventListener('DOMContentLoaded', checkExtensionInstalled);
