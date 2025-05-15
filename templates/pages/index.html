@@ -19,7 +19,13 @@
                     <tr>
                       <td class="fw-medium">{{ dashboard.name }}</td>
                       <td class="text-end">
-                        <button class="btn btn-sm btn-outline-danger" title="Eliminar">
+                        <a href="{{ url_for('home_blueprint.view_dashboard', dashboard_id=dashboard.id) }}" class="btn btn-sm btn-outline-primary me-2" title="Ver">
+                          <i class="ti ti-eye"></i>
+                        </a>
+                        <a href="{{ url_for('home_blueprint.edit_dashboard', dashboard_id=dashboard.id) }}" class="btn btn-sm btn-outline-secondary me-2" title="Configuración">
+                          <i class="ti ti-settings"></i>
+                        </a>
+                        <button class="btn btn-sm btn-outline-danger" title="Eliminar" data-dashboard-id="{{ dashboard.id }}">
                           <i class="ti ti-trash"></i>
                         </button>
                       </td>
@@ -43,4 +49,47 @@
 {% endblock content %}
 
 {% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteButtons = document.querySelectorAll('.btn-outline-danger');
+    
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            if (confirm('¿Estás seguro de que deseas eliminar este dashboard?')) {
+                const row = this.closest('tr');
+                const dashboardId = this.getAttribute('data-dashboard-id');
+                
+                fetch(`/dashboard/${dashboardId}/delete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        row.remove();
+                        // If no more dashboards, show the empty message
+                        const tbody = document.querySelector('tbody');
+                        if (tbody.children.length === 0) {
+                            tbody.innerHTML = `
+                                <tr>
+                                    <td class="text-muted text-center py-4" colspan="2">
+                                        No hay dashboards creados aún.
+                                    </td>
+                                </tr>`;
+                        }
+                    } else {
+                        alert('Error al eliminar el dashboard: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al eliminar el dashboard');
+                });
+            }
+        });
+    });
+});
+</script>
 {% endblock extra_js %}

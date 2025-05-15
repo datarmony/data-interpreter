@@ -7,8 +7,8 @@ import base64
 import os
 import uuid
 from apps.pages import blueprint
-from flask import render_template, request, current_app
-from flask_login import login_required
+from flask import render_template, request, current_app, redirect, url_for, flash
+from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
 from apps.models import Dashboard
 from flask import jsonify
@@ -17,7 +17,6 @@ from apps import db
 from apps.gemini_analyzer import analyze_image_with_gemini
 import datetime
 import markdown
-
 
 @blueprint.context_processor
 def inject_debug_status():
@@ -182,3 +181,44 @@ def upload_screenshot():
 @login_required
 def extension_required():
     return render_template('pages/extension-required.html')
+
+
+@blueprint.route('/dashboard/<int:dashboard_id>/delete', methods=['POST'])
+@login_required
+def delete_dashboard(dashboard_id):
+    dashboard = Dashboard.query.filter_by(id=dashboard_id, user_id=current_user.id).first_or_404()
+    try:
+        dashboard.delete()
+        return jsonify(success=True, message="Dashboard eliminado exitosamente"), 200
+    except Exception as e:
+        return jsonify(success=False, message=str(e)), 500
+
+
+
+@blueprint.route('/dashboard/<int:dashboard_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_dashboard(dashboard_id):
+    dashboard = Dashboard.query.filter_by(id=dashboard_id, user_id=current_user.id).first_or_404()
+    
+    if request.method == 'POST':
+        name = request.form.get('name')
+        share_link = request.form.get('share_link')
+        reset_height = request.form.get('reset_height') == 'true'
+        
+        if name:
+            dashboard.name = name
+        if share_link:
+            dashboard.share_link = share_link
+            dashboard.embed_link = dashboard.generate_embed_link(share_link)
+        if reset_height:
+            dashboard.height = None
+            
+        try:
+            db.session.commit()
+            flash('Dashboard actualizado exitosamente', 'success')
+            return redirect(url_for('home_blueprint.view_dashboard', dashboard_id=dashboard_id))
+        except Exception as e:
+            db.session.rollback()
+            flash('Error al actualizar el dashboard: ' + str(e), 'error')
+            
+    return render_template('pages/edit-dashboard.html', dashboard=dashboard, segment='dashboards')
