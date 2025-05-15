@@ -6,24 +6,30 @@
 <div class="pc-container">
   <div class="pc-content">
     <div class="row">
-      <div class="col-sm-12">
+      <div class="col-md-6 mx-auto">
         <div class="card">
+          <div class="card-header">
+            <h5>Extensión de Chrome Requerida</h5>
+          </div>
           <div class="card-body text-center">
-            <div class="mb-3">
-              <i class="ti ti-alert-triangle text-warning display-1"></i>
+            <div class="mb-4">
+              <i class="ti ti-puzzle text-primary" style="font-size: 48px;"></i>
             </div>
-            <h1 class="h2 fw-bold mb-3">Extensión Requerida</h1>
-            <p class="lead mb-3">
-              Para utilizar todas las funciones de este sitio web, necesitas instalar la extensión de Chrome <strong>Capture Dashboard Iframe</strong>.
-            </p>
+            <h3 class="mb-3">Extensión no detectada</h3>
             <p class="mb-4">
-              Puedes descargarla desde <a href="YOUR_EXTENSION_LINK_HERE" target="_blank" rel="noopener noreferrer">aquí</a>.
+              Para utilizar todas las funcionalidades de la aplicación, necesitas instalar nuestra extensión de Chrome.
             </p>
-            <p class="mb-4">
-              Si ya has instalado la extensión, por favor asegúrate de que esté habilitada en la configuración de extensiones de tu navegador.
-            </p>
-            <hr class="my-4">
-            <a href="{{ url_for('home_blueprint.index') }}" class="btn btn-secondary">Ir al inicio</a>
+            <div class="d-grid gap-2">
+              <a href="{{ url_for('static', filename='extension/datarmony-extension.zip') }}" 
+                 class="btn btn-primary"
+                 download>
+                <i class="ti ti-download me-2"></i>
+                Descargar Extensión (.zip)
+              </a>
+              <p class="text-muted mt-3 small">
+                Una vez descargada, descomprime el archivo y sigue las instrucciones de instalación en Chrome.
+              </p>
+            </div>
           </div>
         </div>
       </div>
