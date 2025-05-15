@@ -1,5 +1,5 @@
 const browser = detectBrowser();
-const EXTENSION_ID = 'hciighoepojdapoicknblaebjdiflhkd';
+const EXTENSION_ID = 'kdldeodplkdicfgfiahcaklnnmmkgpkd';
 const REQUIRED_PAGE_PATH = '/extension-required';
 
 switch (browser) {
