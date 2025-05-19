@@ -4,7 +4,6 @@ from flask import current_app
 import mimetypes
 
 def analyze_image_with_gemini(image_path, custom_prompt=None):
-
     api_key = current_app.config.get('GEMINI_API_KEY')
     if not api_key:
         current_app.logger.error("GEMINI_API_KEY not configured.")
@@ -12,7 +11,8 @@ def analyze_image_with_gemini(image_path, custom_prompt=None):
 
     genai.configure(api_key=api_key)
 
-    prompt = custom_prompt if custom_prompt else current_app.config.get('GEMINI_DEFAULT_PROMPT', "Describe this image.")
+    # Use custom prompt if provided, otherwise use default from config
+    prompt = custom_prompt if custom_prompt else current_app.config.get('GEMINI_DEFAULT_PROMPT')
 
     try:
         # Determine MIME type

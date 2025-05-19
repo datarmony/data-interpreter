@@ -14,7 +14,7 @@ class Dashboard(db.Model):
     share_link = db.Column(db.String(255), nullable=False)
     embed_link = db.Column(db.String(255), nullable=False)
     height = db.Column(db.Integer, nullable=True, default=None)
-    
+    prompt = db.Column(db.Text, nullable=True)  # Campo para almacenar el prompt personalizado
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)  # NEW
     user = db.relationship("Users", backref="dashboards")  # Optional reverse access
  

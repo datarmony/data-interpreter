@@ -117,6 +117,12 @@ def upload_screenshot():
     if not data or 'image_data' not in data:
         return jsonify(success=False, message="Missing 'image_data' in request body"), 400
 
+    # Get dashboard_id from request data
+    dashboard_id = data.get('dashboard_id')
+    dashboard = None
+    if dashboard_id:
+        dashboard = Dashboard.query.filter_by(id=dashboard_id, user_id=current_user.id).first()
+
     image_data_base64 = data['image_data']
     current_app.logger.info(f"Received screenshot for user {current_user.id}. Length: {len(image_data_base64)}")
  
@@ -149,7 +155,7 @@ def upload_screenshot():
         
         # Analyze the image with Gemini
         current_app.logger.info(f"Starting Gemini analysis for {filepath}")
-        analysis_text = analyze_image_with_gemini(filepath)
+        analysis_text = analyze_image_with_gemini(filepath, dashboard.prompt if dashboard else None)
         current_app.logger.info(f"Gemini analysis result: {analysis_text[:200]}...")
 
         # Return both original Markdown and converted HTML
@@ -203,6 +209,7 @@ def edit_dashboard(dashboard_id):
     if request.method == 'POST':
         name = request.form.get('name')
         share_link = request.form.get('share_link')
+        prompt = request.form.get('prompt')
         reset_height = request.form.get('reset_height') == 'true'
         
         if name:
@@ -210,6 +217,10 @@ def edit_dashboard(dashboard_id):
         if share_link:
             dashboard.share_link = share_link
             dashboard.embed_link = dashboard.generate_embed_link(share_link)
+        
+        # Actualizar el prompt personalizado
+        dashboard.prompt = prompt if prompt.strip() else None
+        
         if reset_height:
             dashboard.height = None
             
