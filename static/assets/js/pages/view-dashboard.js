@@ -218,8 +218,11 @@ function triggerScreenshotCapture() {
     }
  
     log(`[VIEW-DASHBOARD.JS] Sending 'captureFromWeb' message to extension ${EXTENSION_ID}.`);
-    // Reverting: No longer sending dashboardId to extension
-    chrome.runtime.sendMessage(EXTENSION_ID, { action: "captureFromWeb" }, (response) => {
+    // Añadir el ID del dashboard al mensaje
+    chrome.runtime.sendMessage(EXTENSION_ID, { 
+        action: "captureFromWeb",
+        dashboardId: DASHBOARD_ID  // Añadir el ID del dashboard
+    }, (response) => {
         if (chrome.runtime.lastError) {
             error('[VIEW-DASHBOARD.JS] Error sending message to extension:', chrome.runtime.lastError.message);
             // Hide modal if it was shown with loading, show error
