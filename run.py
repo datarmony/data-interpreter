@@ -4,9 +4,13 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 import os
-from   flask_migrate import Migrate
-from   flask_minify  import Minify
-from   sys import exit
+from flask_migrate import Migrate
+from flask_minify import Minify
+from sys import exit
+import pymysql
+
+# Configurar PyMySQL para que actúe como MySQLdb
+pymysql.install_as_MySQLdb()
 
 from apps.config import config_dict
 from apps import create_app, db
