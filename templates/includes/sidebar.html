@@ -4,36 +4,32 @@
     <div class="m-header">
       <a href="index.html" class="b-brand">
         <!-- ========   Change your logo from here   ============ -->
-        <img style="height: 30px;" src="{{ url_for('static', filename='assets/images/logo.png') }}" alt=""
+        <img style="height: 90px;" src="{{ url_for('static', filename='assets/images/logo.png') }}" alt=""
           class="logo logo-lg" />
       </a>
     </div>
     <div class="navbar-content">
       <ul class="pc-navbar">
+        <li class="pc-item" style="padding-top: 10px;">
+          <a href="{{ url_for('home_blueprint.index') }}" class="pc-link"><span class="pc-micon"><i
+                class="ti ti-apps"></i></span><span class="pc-mtext">Panel Principal</span></a>
+        </li>
         {% if current_user.dashboards %}
         <li class="pc-item pc-caption">
           <label>Dashboards</label>
           <i class="ti ti-chart-bar"></i>
         </li>
+        
+        <!-- Dashboards individuales -->
+        {% for dashboard in current_user.dashboards %}
         <li class="pc-item">
-          <a href="{{ url_for('home_blueprint.index') }}" class="pc-link"><span class="pc-micon"><i
-                class="ti ti-layout-list"></i></span><span class="pc-mtext">Ver todas</span></a>
-        </li>
-        <li class="pc-item pc-hasmenu">
-          <a href="#!" class="pc-link">
-            <span class="pc-micon"><i class="ti ti-layout-grid"></i></span>
-            <span class="pc-mtext">Acceso rápido</span>
-            <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
+          <a class="pc-link" href="{{ url_for('home_blueprint.view_dashboard', dashboard_id=dashboard.id) }}">
+            <span class="pc-micon"><i class="ti ti-chart-line"></i></span>
+            <span class="pc-mtext">{{ dashboard.name }}</span>
           </a>
-          <ul class="pc-submenu">
-            {% for dashboard in current_user.dashboards %}
-            <li class="pc-item">
-              <a class="pc-link" href="{{ url_for('home_blueprint.view_dashboard', dashboard_id=dashboard.id) }}">
-                {{ dashboard.name }}
-              </a>
-            </li>
-            {% endfor %}
-            {% endif %}
+        </li>
+        {% endfor %}
+        {% endif %}
       </ul>
     </div>
   </div>
