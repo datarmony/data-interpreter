@@ -1,0 +1,74 @@
+{% extends 'layouts/auth_base.html' %}
+
+{% block title %} Registro de Administrador {% endblock title %}
+
+{% block content %}
+  <div class="auth-main">
+    <div class="auth-wrapper v3">
+      <div class="auth-form">
+        <div class="card my-5">
+          <div class="card-body">
+            <a href="#" class="d-flex justify-content-center">
+              <img style="width: 80%;" src="{{ url_for('static', filename='assets/images/logo.png') }}" />
+            </a>
+            <div class="row">
+              <div class="d-flex justify-content-center">
+                <div class="auth-header">
+                  <h2 class="text-secondary mt-5"><b>Registro de Administrador</b></h2>
+                </div>
+              </div>
+            </div>
+            <h5 class="my-4 d-flex justify-content-center">
+              
+              {% if msg %}
+                <span class="{% if success %}text-success{% else %}text-danger{% endif %}">
+                  {{ msg | safe }}
+                </span>
+              {% else %}
+                Ingresa tus credenciales y la clave de registro
+              {% endif %} 
+            </h5>
+
+            {% if success %}
+              <hr />
+              <h5 class="d-flex justify-content-center"> 
+                <a href="{{ url_for('authentication_blueprint.login') }}" class="btn btn-secondary p-2">Iniciar Sesión</a>
+              </h5>              
+            {% else %}
+              <form role="form" method="post" action="">
+                {{ form.hidden_tag() }} 
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-floating mb-3">
+                      {{ form.username(placeholder="Usuario", class="form-control") }}
+                      <label for="floatingInput">Usuario</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      {{ form.email(placeholder="Correo Electrónico", class="form-control") }}
+                      <label for="floatingInput">Correo Electrónico</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      {{ form.password(placeholder="Contraseña", class="form-control", type="password") }}
+                      <label for="floatingInput">Contraseña</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      {{ form.register_key(placeholder="Clave de Registro", class="form-control", type="password") }}
+                      <label for="floatingInput">Clave de Registro</label>
+                    </div>
+                    <div class="d-grid mt-4">
+                      <button type="submit" name="register" class="btn btn-secondary p-2">Registrar Administrador</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <hr />
+              <h5 class="d-flex justify-content-center">
+                <a class="ms-2" href="{{ url_for('authentication_blueprint.login') }}">Volver a Iniciar Sesión</a>
+              </h5>
+            {% endif %} 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

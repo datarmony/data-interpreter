@@ -17,7 +17,6 @@
         {% if current_user.dashboards %}
         <li class="pc-item pc-caption">
           <label>Dashboards</label>
-          <i class="ti ti-chart-bar"></i>
         </li>
         
         <!-- Dashboards individuales -->
@@ -31,7 +30,29 @@
         {% endfor %}
         {% endif %}
       </ul>
+      {% if current_user.is_authenticated and current_user.is_admin %}
+      <ul class="pc-navbar back-aligned">
+        <li class="pc-item pc-caption">
+          <label>Admin</label>
+        </li>
+        <li class="pc-item">
+          <a class="pc-link" href="{{ url_for('authentication_blueprint.admin_create_user') }}">
+            <span class="pc-micon"><i class="ti ti-user-plus"></i></span>
+            <span class="pc-mtext">Crear Usuario</span>
+          </a>
+        </li>
+        <!--
+        <li class="pc-item">
+          <a class="pc-link" href="">
+            <span class="pc-micon"><i class="ti ti-chart-line"></i></span>
+            <span class="pc-mtext">Añadir Dashboards</span>
+          </a>
+        </li>
+        -->
+      </ul>
+      {% endif %}
     </div>
   </div>
 </nav>
 <!-- [ Sidebar Menu ] end -->
+

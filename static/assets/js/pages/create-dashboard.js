@@ -46,11 +46,11 @@ document.getElementById("saveDashboardBtn").addEventListener("click", function (
             location.reload();
           }, 1500);
         } else {
-          alert(data.message);
+          warn(data.message);
         }
       })
       .catch(err => {
         error(err);
-        alert("Something went wrong!");
+        warn("Something went wrong!");
       });
   });

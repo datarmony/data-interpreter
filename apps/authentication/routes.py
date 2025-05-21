@@ -3,7 +3,7 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from flask import render_template, redirect, request, url_for
+from flask import render_template, redirect, request, url_for, current_app
 from flask_login import (
     current_user,
     login_user,
@@ -15,12 +15,17 @@ from flask_dance.contrib.google import google
 
 from apps import db, login_manager
 from apps.authentication import blueprint
-from apps.authentication.forms import LoginForm, CreateAccountForm
+from apps.authentication.forms import LoginForm, CreateAccountForm, RegisterForm, CreateUserForm
 from apps.authentication.models import Users
 from apps.config import Config
 from apps.authentication.util import verify_pass
+import os
 
 
+@blueprint.context_processor
+def inject_debug_status():
+    return dict(DEBUG=current_app.config.get('DEBUG', False))
+    
 @blueprint.route('/')
 def route_default():
     return redirect(url_for('authentication_blueprint.login'))
@@ -77,45 +82,60 @@ def login():
     return redirect(url_for('home_blueprint.index'))
 
 
-@blueprint.route('/register', methods=['GET', 'POST'])
-def register():
-    create_account_form = CreateAccountForm(request.form)
-    if 'register' in request.form:
+@blueprint.route('/admin/register', methods=['GET', 'POST'])
+def admin_register():
+    # Verificar si el usuario ya está autenticado
+    if current_user.is_authenticated:
+        return redirect(url_for('home_blueprint.index'))
 
+    # Declarar el formulario
+    form = RegisterForm(request.form)
+
+    # Verificar si el formulario es válido
+    if 'register' in request.form:
+        
         username = request.form['username']
         email = request.form['email']
-
-        # Check usename exists
+        password = request.form['password']
+        register_key = request.form['register_key']
+        
+        # Verificar la clave de registro
+        admin_key = os.getenv('ADMIN_REGISTER_KEY')
+        if not admin_key or register_key != admin_key:
+            return render_template('admin/register.html',
+                                   msg='Clave de registro incorrecta',
+                                   success=False,
+                                   form=form)
+        
+        # Verificar si el usuario ya existe
         user = Users.query.filter_by(username=username).first()
         if user:
-            return render_template('accounts/register.html',
-                                   msg='Username already registered',
+            return render_template('admin/register.html',
+                                   msg='El usuario ya existe',
                                    success=False,
-                                   form=create_account_form)
+                                   form=form)
 
-        # Check email exists
+        # Verificar si el email ya existe
         user = Users.query.filter_by(email=email).first()
         if user:
-            return render_template('accounts/register.html',
-                                   msg='Email already registered',
+            return render_template('admin/register.html',
+                                   msg='El correo electrónico ya existe',
                                    success=False,
-                                   form=create_account_form)
+                                   form=form)
 
-        # else we can create the user
-        user = Users(**request.form)
+        # Crear usuario con rol de administrador
+        user = Users(username=username, email=email, password=password, is_admin=True)
         db.session.add(user)
         db.session.commit()
 
-        # Delete user from session
-        logout_user()
-        
-        return render_template('accounts/register.html',
-                               msg='User created successfully.',
+        # Redirigir a la página de inicio de sesión
+        return render_template('admin/register.html',
+                               msg='Administrador creado correctamente. <br> Por favor, inicia sesión.',
                                success=True,
-                               form=create_account_form)
+                               form=form)
 
     else:
-        return render_template('accounts/register.html', form=create_account_form)
+        return render_template('admin/register.html', form=form)
 
 
 @blueprint.route('/logout')
@@ -152,3 +172,64 @@ def not_found_error(error):
 @blueprint.errorhandler(500)
 def internal_error(error):
     return render_template('pages/page-500.html'), 500
+
+@blueprint.route('/admin/create-user', methods=['GET', 'POST'])
+def admin_create_user():
+    # Verificar si el usuario está autenticado y es administrador
+    if not current_user.is_authenticated or not current_user.is_admin:
+        return render_template('pages/page-403.html'), 403
+
+    # Crear el formulario
+    form = CreateUserForm(request.form)
+    
+    # Verificar si el formulario es válido
+    if request.method == 'POST' and 'register' in request.form:
+        # Obtener los datos del formulario
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        
+        # Verificar si el usuario ya existe
+        user = Users.query.filter_by(username=username).first()
+        if user:
+            return render_template('admin/create_user.html',
+                                   msg='El usuario ya existe',
+                                   success=False,
+                                   form=form)
+        # Verificar si el email ya existe
+        user = Users.query.filter_by(email=email).first()
+        if user:
+            return render_template('admin/create_user.html',
+                                   msg='El correo electrónico ya existe',
+                                   success=False,
+                                   form=form)
+        
+        try:
+            # Crear el usuario (siempre como no administrador)
+            user = Users(username=username, email=email, password=password, is_admin=False)
+            db.session.add(user)
+            db.session.commit()
+            
+            # Después de crear el usuario exitosamente, redirigir a la misma página
+            # para forzar una recarga completa y limpiar el formulario
+            return redirect(url_for('authentication_blueprint.admin_create_user', 
+                                    success=True, 
+                                    msg='Usuario creado correctamente'))
+        except Exception as e:
+            # Capturar cualquier error durante la creación
+            db.session.rollback()
+            return render_template('admin/create_user.html',
+                                   msg=f'Error al crear usuario: {str(e)}',
+                                   success=False,
+                                   form=form)
+    
+    # Verificar si hay mensajes en la URL (después de redirección)
+    success = request.args.get('success', 'False') == 'True'
+    msg = request.args.get('msg', None)
+    
+    # Renderizar la plantilla con el formulario
+    return render_template('admin/create_user.html', 
+                          form=CreateUserForm(),  # Siempre un formulario nuevo y vacío
+                          success=success, 
+                          msg=msg)
+    

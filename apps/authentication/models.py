@@ -20,6 +20,7 @@ class Users(db.Model, UserMixin):
     email         = db.Column(db.String(64), unique=True)
     password      = db.Column(db.LargeBinary)
     bio           = db.Column(db.Text(), nullable=True)
+    is_admin      = db.Column(db.Boolean, default=False)
 
     oauth_github  = db.Column(db.String(100), nullable=True)
     oauth_google  = db.Column(db.String(100), nullable=True)

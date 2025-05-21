@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const newHeight = parseInt(heightInput.value, 10);
         if (isNaN(newHeight) || newHeight < 100) { // Adjusted min height based on input
             // Maybe show a less intrusive message? For now, alert is simple.
-            alert("Please enter a valid height (minimum 100px).");
+            alert("Por favor, ingrese una altura válida (mínimo 100px).");
             return false; // Indicate failure
         }
         if (iframeContainer) {
@@ -63,15 +63,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     heightAdjustmentSection.style.display = 'none'; // Hide the section
                 }
                  // Optionally show a success message (e.g., using a toast library)
-                 alert('Height confirmed and saved successfully!');
+                 log('Height confirmed and saved successfully!');
             } else {
                 const errorData = await response.json().catch(() => ({ message: 'Failed to save height. Server returned an error.' }));
                 error('Failed to save height:', response.status, errorData);
-                alert(`Error saving height: ${errorData.message || response.statusText}`);
             }
         } catch (error) {
             error('Network or other error saving height:', error);
-            alert('An error occurred while trying to save the height. Please check your connection and try again.');
+            alert('Ocurrió un error al intentar guardar la altura. Por favor, verifica tu conexión y vuelve a intentarlo.');
         }
     }
 
@@ -101,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     showConfirmationPopup(currentHeight, dashboardId);
                  } else {
                      error("DASHBOARD_ID is not defined. Make sure it's passed correctly from the template.");
-                     alert("Error: Could not determine the dashboard ID. Please contact support.");
+                     // alert("Error: Could not determine the dashboard ID. Please contact support.");
                  }
             }
         });
@@ -113,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   
 // Extension Code
-const EXTENSION_ID = 'kdldeodplkdicfgfiahcaklnnmmkgpkd';
+const EXTENSION_ID = 'fkpeaoeiedlgegianjohijoiddbebecl';
 const REQUIRED_PAGE_PATH = '/extension-required';
 
 const analyzeButton = document.getElementById('analyzeReportButton');
@@ -163,7 +162,7 @@ function showGeminiAnalysis(analysisHtml, isLoading = false, isError = false) {
     } else {
         error("[VIEW-DASHBOARD.JS] Gemini modal instance, body, or download button not available. Modal:", geminiModal, "Body:", geminiModalBody, "Button:", downloadAnalysisButton);
         // Simplify fallback alert
-        alert("Gemini Analysis:\n" + analysisHtml.replace(/<[^>]*>/g, "")); // Remove HTML tags for alert
+        alert("Gemini Analysis:\n" + analysisHtml.replace(/<[^>]*>/g, ""));
     }
 // Helper function to escape HTML (basic version)
 function escapeHtml(unsafe) {
@@ -200,7 +199,7 @@ if (downloadAnalysisButton) {
             downloadText('gemini-analysis.md', currentAnalysisMd); 
         } else {
             error("[VIEW-DASHBOARD.JS] No Markdown analysis content available to download.");
-            alert("No analysis content available to download.");
+            // alert("No analysis content available to download.");
         }
     });
 } else {
@@ -213,7 +212,7 @@ function triggerScreenshotCapture() {
         warn('[VIEW-DASHBOARD.JS] Chrome runtime not available for sending message to extension.');
         // Potentially redirect to an "extension required" page or show a more permanent error.
         // For now, an alert:
-        alert('The browser extension is not available. Please ensure it is installed and enabled.');
+        alert('La extensión del navegador no está disponible. Por favor, asegúrate de que esté instalada y habilitada.');
         return;
     }
  
@@ -227,7 +226,7 @@ function triggerScreenshotCapture() {
             error('[VIEW-DASHBOARD.JS] Error sending message to extension:', chrome.runtime.lastError.message);
             // Hide modal if it was shown with loading, show error
             if (geminiModal) geminiModal.hide();
-            alert('Could not connect to the browser extension. Please ensure it is installed and enabled.');
+            alert('La extensión del navegador no está disponible. Por favor, asegúrate de que esté instalada y habilitada.');
             return;
         }
 
@@ -251,7 +250,7 @@ function triggerScreenshotCapture() {
             warn('[VIEW-DASHBOARD.JS] Extension did not respond with status: started. Response:', response);
             // Hide modal if it was shown with loading, show error
             if (geminiModal) geminiModal.hide();
-            alert('The extension did not start the screenshot process correctly.');
+            alert('La extensión no inició correctamente el proceso de captura de pantalla.');
         }
     });
 }

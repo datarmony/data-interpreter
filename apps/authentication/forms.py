@@ -27,5 +27,34 @@ class CreateAccountForm(FlaskForm):
                       id='email_create',
                       validators=[DataRequired(), Email()])
     password = PasswordField('Password',
-                             id='pwd_create',
-                             validators=[DataRequired()])
+                           id='pwd_create',
+                           validators=[DataRequired()])
+    register_key = PasswordField('Register Key',
+                               id='register_key',
+                               validators=[DataRequired()])
+
+class RegisterForm(FlaskForm):
+    username = StringField('Username',
+                         id='username_create',
+                         validators=[DataRequired()])
+    email = StringField('Email',
+                      id='email_create',
+                      validators=[DataRequired(), Email()])
+    password = PasswordField('Password',
+                           id='pwd_create',
+                           validators=[DataRequired()])
+    register_key = PasswordField('Register Key',
+                               id='register_key',
+                               validators=[DataRequired()])
+
+
+class CreateUserForm(FlaskForm):
+    username = StringField('Username',
+                         id='username_create',
+                         validators=[DataRequired()])
+    email = StringField('Email',
+                      id='email_create',
+                      validators=[DataRequired(), Email()])
+    password = PasswordField('Password',
+                           id='pwd_create',
+                           validators=[DataRequired()])
