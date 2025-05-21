@@ -59,15 +59,26 @@ class Config(object):
 
         try:
             
-            # Relational DBMS: PSQL, MySql
-            SQLALCHEMY_DATABASE_URI = '{}://{}:{}@{}:{}/{}'.format(
-                DB_ENGINE,
-                DB_USERNAME,
-                DB_PASS,
-                DB_HOST,
-                DB_PORT,
-                DB_NAME
-            ) 
+            # Verificar si estamos usando el conector de Cloud SQL
+            if DB_HOST and DB_HOST.startswith('/cloudsql/'):
+                # Formato para Cloud SQL con el conector
+                SQLALCHEMY_DATABASE_URI = '{}://{}:{}@/{}?unix_socket={}'.format(
+                    DB_ENGINE,
+                    DB_USERNAME,
+                    DB_PASS,
+                    DB_NAME,
+                    DB_HOST
+                )
+            else:
+                # Formato estándar para conexiones TCP/IP
+                SQLALCHEMY_DATABASE_URI = '{}://{}:{}@{}:{}/{}'.format(
+                    DB_ENGINE,
+                    DB_USERNAME,
+                    DB_PASS,
+                    DB_HOST,
+                    DB_PORT,
+                    DB_NAME
+                ) 
 
             USE_SQLITE  = False
 
