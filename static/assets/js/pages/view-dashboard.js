@@ -265,19 +265,22 @@ window.addEventListener("message", (event) => {
     log("[VIEW-DASHBOARD.JS] Message received from content script via window.postMessage:", event.data);
     const message = event.data;
 
-    if (message.action === "showGeminiAnalysis" && message.payloadHtml && message.payloadMd) {
-        log("[VIEW-DASHBOARD.JS] Action 'showGeminiAnalysis'. HTML:", message.payloadHtml.substring(0,100) + "...", "MD:", message.payloadMd.substring(0,100) + "...");
-        currentAnalysisMd = message.payloadMd; // Store the received Markdown
-        showGeminiAnalysis(message.payloadHtml, false, false); // Display HTML, isLoading = false, isError = false
-    } else if (message.action === "geminiAnalysisError" && message.payloadError) {
-        error("[VIEW-DASHBOARD.JS] Action 'geminiAnalysisError'. Error:", message.payloadError);
-        currentAnalysisMd = ''; // Clear any previous MD on error
-        // Display error message (assuming it's plain text)
-        showGeminiAnalysis(`<p class="text-danger">Error during Gemini analysis: ${escapeHtml(message.payloadError)}</p>`, false, true); // isLoading = false, isError = true
-    } else {
-        warn("[VIEW-DASHBOARD.JS] Received unknown message action or missing data from content script:", message);
-        currentAnalysisMd = ''; // Clear MD if message is unexpected
-    }
+    // Añadir un pequeño retraso para asegurar que el modal de carga se muestre primero
+    setTimeout(() => {
+        if (message.action === "showGeminiAnalysis" && message.payloadHtml && message.payloadMd) {
+            log("[VIEW-DASHBOARD.JS] Action 'showGeminiAnalysis'. HTML:", message.payloadHtml.substring(0,100) + "...", "MD:", message.payloadMd.substring(0,100) + "...");
+            currentAnalysisMd = message.payloadMd; // Store the received Markdown
+            showGeminiAnalysis(message.payloadHtml, false, false); // Display HTML, isLoading = false, isError = false
+        } else if (message.action === "geminiAnalysisError" && message.payloadError) {
+            error("[VIEW-DASHBOARD.JS] Action 'geminiAnalysisError'. Error:", message.payloadError);
+            currentAnalysisMd = ''; // Clear any previous MD on error
+            // Display error message (assuming it's plain text)
+            showGeminiAnalysis(`<p class="text-danger">Error during Gemini analysis: ${escapeHtml(message.payloadError)}</p>`, false, true); // isLoading = false, isError = true
+        } else {
+            warn("[VIEW-DASHBOARD.JS] Received unknown message action or missing data from content script:", message);
+            currentAnalysisMd = ''; // Clear MD if message is unexpected
+        }
+    }, 1000); // Añadir un retraso de 1 segundo para asegurar que el modal de carga se muestre
 }, false);
 
 
