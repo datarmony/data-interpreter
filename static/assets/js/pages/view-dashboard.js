@@ -219,7 +219,7 @@ function triggerScreenshotCapture() {
     log(`[VIEW-DASHBOARD.JS] Sending 'captureScreenshot' message to extension ${EXTENSION_ID}.`);
     // Añadir el ID del dashboard al mensaje
     chrome.runtime.sendMessage(EXTENSION_ID, { 
-        action: "captureScreenshot",  // Cambiado de "captureFromWeb" a "captureScreenshot"
+        action: "captureScreenshot",
         dashboardId: DASHBOARD_ID
     }, (response) => {
         if (chrome.runtime.lastError) {
@@ -229,34 +229,27 @@ function triggerScreenshotCapture() {
             alert('La extensión del navegador no está disponible. Por favor, asegúrate de que esté instalada y habilitada.');
             return;
         }
-
-        if (response && response.status === 'started') {
+    
+        // Modificar esta condición para aceptar tanto status: 'started' como success: true
+        if ((response && response.status === 'started') || (response && response.success === true)) {
             log('[VIEW-DASHBOARD.JS] Extension reported screenshot capture started.');
-            // Show loading state in modal after a short delay
-            setTimeout(() => {
-                const loadingHtml = `
-                    <div class="text-center">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="mt-2">Capturando imagen y enviando para análisis... Por favor espera.</p>
-                    </div>`;
-                showGeminiAnalysis(loadingHtml, true, true); // isLoading = true, isError = true (to hide download button initially)
-            }, 500); // 500ms delay
-
-            // Waiting for message via content script.
-
-        } else {
-            warn('[VIEW-DASHBOARD.JS] Extension did not respond with status: started. Response:', response);
-            // Hide modal if it was shown with loading, show error
+            // Show loading state in modal IMMEDIATELY instead of after a delay
             const loadingHtml = `
-                    <div class="text-center">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="mt-2">Capturando imagen y enviando para análisis... Por favor espera.</p>
-                    </div>`;
-                showGeminiAnalysis(loadingHtml, true, true);
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Capturando imagen y enviando para análisis... Por favor espera.</p>
+                </div>`;
+            showGeminiAnalysis(loadingHtml, true, true); // isLoading = true, isError = true (to hide download button initially)
+            
+            // Removed the setTimeout delay
+            // Waiting for message via content script.
+        } else {
+            warn('[VIEW-DASHBOARD.JS] Extension did not respond with status: started or success: true. Response:', response);
+            // Hide modal if it was shown with loading, show error
+            if (geminiModal) geminiModal.hide();
+            alert('La extensión no inició correctamente el proceso de captura de pantalla.');
         }
     });
 }
