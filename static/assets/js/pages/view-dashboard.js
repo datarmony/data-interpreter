@@ -216,11 +216,11 @@ function triggerScreenshotCapture() {
         return;
     }
  
-    log(`[VIEW-DASHBOARD.JS] Sending 'captureFromWeb' message to extension ${EXTENSION_ID}.`);
+    log(`[VIEW-DASHBOARD.JS] Sending 'captureScreenshot' message to extension ${EXTENSION_ID}.`);
     // Añadir el ID del dashboard al mensaje
     chrome.runtime.sendMessage(EXTENSION_ID, { 
-        action: "captureFromWeb",
-        dashboardId: DASHBOARD_ID  // Añadir el ID del dashboard
+        action: "captureScreenshot",  // Cambiado de "captureFromWeb" a "captureScreenshot"
+        dashboardId: DASHBOARD_ID
     }, (response) => {
         if (chrome.runtime.lastError) {
             error('[VIEW-DASHBOARD.JS] Error sending message to extension:', chrome.runtime.lastError.message);
