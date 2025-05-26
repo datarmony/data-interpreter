@@ -230,7 +230,7 @@ function triggerScreenshotCapture() {
             return;
         }
 
-        if (response && response.success === true) {
+        if (response && response.status === 'started') {
             log('[VIEW-DASHBOARD.JS] Extension reported screenshot capture started.');
             // Show loading state in modal after a short delay
             setTimeout(() => {
@@ -249,8 +249,14 @@ function triggerScreenshotCapture() {
         } else {
             warn('[VIEW-DASHBOARD.JS] Extension did not respond with status: started. Response:', response);
             // Hide modal if it was shown with loading, show error
-            if (geminiModal) geminiModal.hide();
-            alert('La extensión no inició correctamente el proceso de captura de pantalla.');
+            const loadingHtml = `
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Capturando imagen y enviando para análisis... Por favor espera.</p>
+                    </div>`;
+                showGeminiAnalysis(loadingHtml, true, true);
         }
     });
 }
