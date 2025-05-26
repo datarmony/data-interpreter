@@ -22,13 +22,23 @@
             <div class="d-grid gap-2">
               <a href="https://chromewebstore.google.com/detail/datarmony-data-interprete/ckbljbnfcnaejohkpbcaepjhgimcckji" 
                  class="btn btn-primary"
-                 download>
+                 target="_blank">
                 <i class="ti ti-download me-2"></i>
                 Descargar Extensión en la Web Store
               </a>
               <p class="text-muted mt-3 small">
                 Una vez descargada, descomprime el archivo y sigue las instrucciones de instalación en Chrome.
               </p>
+            </div>
+            
+            <!-- Nuevo bloque para usuarios que ya tienen la extensión instalada -->
+            <div class="mt-5 pt-3 border-top">
+              <h5 class="mb-3">¿Ya has instalado la extensión?</h5>
+              <p>Si ya has instalado la extensión y has recargado la página, haz clic en el botón de abajo para verificar y continuar.</p>
+              <button onclick="window.checkAndRedirect()" class="btn btn-success">
+                <i class="ti ti-check me-2"></i>
+                Verificar y continuar
+              </button>
             </div>
           </div>
         </div>
@@ -40,5 +50,4 @@
 
 {% block extra_js %}
 {{ super() }}
-
 {% endblock extra_js %}

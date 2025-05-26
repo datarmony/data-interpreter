@@ -1,5 +1,6 @@
 const EXTENSION_ID = 'ckbljbnfcnaejohkpbcaepjhgimcckji';
 const REQUIRED_PAGE_PATH = '/extension-required';
+const INDEX_PATH = '/index';
 
 function detectBrowser() {
     let userAgent = navigator.userAgent;
@@ -22,11 +23,20 @@ function redirectToExtensionRequired() {
     }
 }
 
+function redirectToIndex() {
+    if (window.location.pathname !== INDEX_PATH) {
+        log("Extension detected, redirecting to index.");
+        window.location.href = INDEX_PATH;
+    } else {
+        log("Already on the index page, no redirect needed.");
+    }
+}
+
 function log(...args) {
     console.log("[Extension Check]", ...args);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+function checkExtension() {
     const browser = detectBrowser();
 
     switch (browser) {
@@ -38,6 +48,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         redirectToExtensionRequired();
                     } else if (response && response.version) {
                         log("Extension installed, version:", response.version);
+                        // Si la extensión está instalada y estamos en la página de extensión requerida, redirigir al index
+                        if (window.location.pathname === REQUIRED_PAGE_PATH) {
+                            redirectToIndex();
+                        }
                     } else {
                         log("Extension responded, but the response format was unexpected:", response);
                         redirectToExtensionRequired();
@@ -57,4 +71,13 @@ document.addEventListener('DOMContentLoaded', function() {
         default:
             redirectToExtensionRequired();
     }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    checkExtension();
 });
+
+// Exponer la función para que pueda ser llamada desde el botón
+window.checkAndRedirect = function() {
+    checkExtension();
+};
