@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   
 // Extension Code
-const EXTENSION_ID = 'kdldeodplkdicfgfiahcaklnnmmkgpkd';
+const EXTENSION_ID = 'ckbljbnfcnaejohkpbcaepjhgimcckji';
 const REQUIRED_PAGE_PATH = '/extension-required';
 
 const analyzeButton = document.getElementById('analyzeReportButton');

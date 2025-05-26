@@ -1,4 +1,4 @@
-const EXTENSION_ID = 'kdldeodplkdicfgfiahcaklnnmmkgpkd';
+const EXTENSION_ID = 'ckbljbnfcnaejohkpbcaepjhgimcckji';
 const REQUIRED_PAGE_PATH = '/extension-required';
 
 function detectBrowser() {
